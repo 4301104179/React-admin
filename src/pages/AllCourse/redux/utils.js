@@ -25,9 +25,11 @@ export const filterCourse = (products, params) => {
     if (params.size) {
         products.forEach(product => {
             const values = Object.values(product)
-            for (let val of values){
-                if(testValue.has(val))
-                addArray.push(product)
+            for (let val of values) {
+                if (testValue.has(val)) {
+                    if (!addArray.includes(product))
+                        addArray.push(product)
+                }
             }
         });
         // var array = products.filter(product => {
@@ -37,9 +39,9 @@ export const filterCourse = (products, params) => {
         //     }
         // }
         // )
-         console.log('test array', addArray)
-          return addArray
+        console.log('test array', addArray)
+        return addArray
     }
     // console.log(products, "test array1")
-     return products
+    return products
 }
