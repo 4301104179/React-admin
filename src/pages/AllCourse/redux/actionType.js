@@ -1,0 +1,3 @@
+export const GET_PRODUCTS = "GET_PRODUCTS"
+export const TOGGLE_MODALS = "TOGGLE_MODALS"
+// export const FILTER_COURSE = "FILTER_COURSE"
