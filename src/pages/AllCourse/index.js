@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
     Row,
     Col,
@@ -153,14 +153,14 @@ const Course = ({ courseitems, getCourse, setModals, modals }) => {
         if (!isEmpty(courseitems)) setFilterCourse(courseitems)
     }, [courseitems])
 
-    const updateCourse = async (course, item) => {
+    const updateCourse = useCallback(async (course, item) => {
         const filter = courseData.find(cd => cd.category === item.type)
-        console.log(filter, "vo update ko", course, item)
-        const update = await api.patch(`/${filter.id}`, {
-            items: { courses: course }
-        })
-        getData()
-    }
+        console.log("vo update ko", course, item, filter)
+         const update = await api.patch(`/${filter.id}`, {
+             items: { courses: course }
+         })
+         getData()
+    }, [courseData])
 
     const handleNextButton = () => {
         if (currentPage + 1 > (Math.ceil(coursedFilter.length / postsPerPage))) {
@@ -219,12 +219,12 @@ const Course = ({ courseitems, getCourse, setModals, modals }) => {
         //     []
         // );
         updateCheckedState.forEach((check, index) => {
-          if(check === true){
-              addArray.add(courseCategory[index])
-          }
-          else {
-              addArray.delete(courseCategory[index])
-          }
+            if (check === true) {
+                addArray.add(courseCategory[index])
+            }
+            else {
+                addArray.delete(courseCategory[index])
+            }
         })
 
         setFilterCourse(filterCourse(courseitems, addArray))
@@ -243,7 +243,7 @@ const Course = ({ courseitems, getCourse, setModals, modals }) => {
         //         return prev
         //     }, [])
         updateCheckedState.forEach((check, index) => {
-            if(check === true){
+            if (check === true) {
                 addArray.add(level[index])
             }
             else {
@@ -252,6 +252,8 @@ const Course = ({ courseitems, getCourse, setModals, modals }) => {
         })
         setFilterCourse(filterCourse(courseitems, addArray))
     }
+
+    const handleModal = useCallback((index) => setModals(index), [])
 
     return (
         <React.Fragment>
@@ -415,15 +417,16 @@ const Course = ({ courseitems, getCourse, setModals, modals }) => {
                                                             <strong className="text-dark text-uppercase"> ACTION </strong>
                                                         </DropdownToggle>
                                                         <DropdownMenu>
-                                                            <DropdownItem onClick={() => setModals(index)}> Edit </DropdownItem>
+                                                            <DropdownItem onClick={() => handleModal(index)}> Edit </DropdownItem>
                                                             <DropdownItem onClick={() => modal_Delete(index)}> Delete </DropdownItem>
                                                         </DropdownMenu>
                                                     </Dropdown>
                                                     <Editcourse
                                                         modals={modals.includes(index)}
-                                                        setModals={() => setModals(index)}
+                                                        setModals={handleModal}
                                                         updateCourse={updateCourse}
                                                         index={modals}
+                                                        cours={cours}
                                                         coursedFilter={coursedFilter}
                                                     />
 

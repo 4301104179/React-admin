@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, memo } from 'react'
 import {
     Button,
     Form,
@@ -23,15 +23,18 @@ const Editcourse = ({
     setModals,
     updateCourse,
     index,
-    coursedFilter
+    coursedFilter,
+    cours
 }) => {
-    console.log('vo edit prop ', index, coursedFilter)
+    console.log('vo edit prop ', index, coursedFilter,modals,)
 
-
+    const idx = [...index]
+    const idex = idx.pop()
+    console.log('vo edit', idex)
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
-    const [type, setType] = useState()
-    const [level, setLevel] = useState()
+    const [type, setType] = useState('')
+    const [level, setLevel] = useState('')
     const [duration, setDuration] = useState('')
     const [price, setPrice] = useState('')
     const [student, setStudent] = useState('')
@@ -50,7 +53,7 @@ const Editcourse = ({
         console.log('vo item', item)
         const cos = []
         const itemShouldUpdate = coursedFilter.find((it, idx) => idx === index[0])
-        const filterUpdate = coursedFilter.filter(cf => cf.type === item.type)
+        const filterUpdate = coursedFilter.filter(cf => cf.type === cours.type)
         console.log('vo cos', itemShouldUpdate, filterUpdate)
         if(itemShouldUpdate){
             return filterUpdate.map(fl => 
@@ -66,13 +69,13 @@ const Editcourse = ({
         e.preventDefault()
         const item = { title, description, type, level, lesson, duration, student, price }
      console.log('vo coi', handle())
-         updateCourse(handle(),item)
+         updateCourse(handle(),cours)
     }
 
     return (
         <div>
-            <Modal isOpen={modals} toggle={setModals} size="lg">
-                <ModalHeader toggle={setModals}>Edit Topic</ModalHeader>
+            <Modal isOpen={modals} toggle={() => setModals(idex)} size="lg">
+                <ModalHeader toggle={() => setModals(idex)}>Edit Topic</ModalHeader>
                 <ModalBody>
                     <Form onSubmit={(e) => handleSubmit(e)}>
                         <FormGroup className="mb-4">
@@ -80,7 +83,7 @@ const Editcourse = ({
                             <Input
                                 className="rounded-pill bg-transparent border-secondary px-3"
                                 type="text"
-                                value={title}
+                                value={!title ? cours.title : title}
                                 onChange={(e) => setTitle(e.target.value)}
                             />
                         </FormGroup>
@@ -92,7 +95,7 @@ const Editcourse = ({
                                         style={{ height: '500px' }}
                                         renderHTML={text => mdParser.render(text)}
                                         onChange={handleEditorChange}
-                                        value={description}
+                                        value={!description ? cours.description : description}
                                     />
                                 </FormGroup>
                             </Col>
@@ -105,7 +108,7 @@ const Editcourse = ({
                                         type="select"
                                         name="select"
                                         id="selectCategory"
-                                        value={type}
+                                        value={!type ? cours.type : type}
                                         onChange={(e) => setType(e.target.value)}
                                     >
                                         <option className="text-uppercase text-purple"> Select Category * </option>
@@ -135,13 +138,13 @@ const Editcourse = ({
                                         type="select"
                                         name="selectLevel"
                                         id="selectLevel"
-                                        value={level}
+                                        value={!level ? cours.level : level}
                                         onChange={(e) => setLevel(e.target.value)}
                                     >
                                         <option className="text-uppercase text-purple">
                                             Select Level *
                                         </option>
-                                        <option value="Beginnner" className="text-uppercase text-primary">
+                                        <option value="Beginner" className="text-uppercase text-primary">
                                             Beginner
                                         </option>
                                         <option value="Intermediate" selected className="text-uppercase text-primary">
@@ -165,7 +168,7 @@ const Editcourse = ({
                                         name="duration"
                                         id="duration"
                                         placeholder="STUDENT *"
-                                        value={student}
+                                        value={!student ? cours.student : student}
                                         onChange={(e) => setStudent(e.target.value)}
                                     />
                                 </FormGroup>
@@ -179,7 +182,7 @@ const Editcourse = ({
                                         name="duration"
                                         id="duration"
                                         placeholder="PRICE *"
-                                        value={price}
+                                        value={!price ? cours.price : price}
                                         onChange={(e) => setPrice(e.target.value)}
                                     />
                                 </FormGroup>
@@ -193,7 +196,7 @@ const Editcourse = ({
                                         name="duration"
                                         id="duration"
                                         placeholder="DURATION *"
-                                        value={duration}
+                                        value={!duration ? cours.duration : duration}
                                         onChange={(e) => setDuration(e.target.value)}
                                     />
                                 </FormGroup>
@@ -207,7 +210,7 @@ const Editcourse = ({
                                         name="lessons"
                                         id="lessons"
                                         placeholder="LESSONS *"
-                                        value={lesson}
+                                        value={!lesson ? cours.lesson : lesson}
                                         onChange={(e) => setLesson(e.target.value)}
                                     />
                                 </FormGroup>
@@ -237,4 +240,4 @@ const Editcourse = ({
     )
 }
 
-export default Editcourse
+export default memo(Editcourse)
